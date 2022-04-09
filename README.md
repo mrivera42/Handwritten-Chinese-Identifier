@@ -2,7 +2,7 @@
 iOS app that uses a convolutional neural network to identify pictures of handwritten Chinese characters 
 
 
-# Neural Network Architecture 
+### Neural Network Architecture 
 
 https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=726791 
 
