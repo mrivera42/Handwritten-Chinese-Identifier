@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt
+import cv2
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -58,6 +59,15 @@ if __name__ == '__main__':
     print(y_test.shape)
 
     # preprocess 
+    
+
+    # def invert(x):
+    #     image = cv2.bitwise_not(x)
+    #     return image
+    
+    x_train = np.array([cv2.bitwise_not(img) for img in x_train])
+    x_test = np.array([cv2.bitwise_not(img) for img in x_test])
+
     x_train, x_test = x_train.reshape(-1,28,28,1) / 255.0, x_test.reshape(-1,28,28,1) / 255.0 
     print(x_train.shape)
     print(x_test.shape)
@@ -83,12 +93,13 @@ if __name__ == '__main__':
 
     # plot training loss
     loss = pd.DataFrame(model.history.history)
-    loss.plot()
-    plt.title('Lenet-5 MNIST Train/Val Accuracy')
-    plt.xlabel('Epoch')
-    plt.ylabel('Percent')
-    plt.show()
-    plt.savefig('Pretraining_Accuracy_Plot')
+    fig = loss.plot()
+    fig.set_title('Pretraining Loss Plot')
+    fig.set_xlabel('Epoch')
+    fig.set_ylabel('Percent')
+    fig = fig.get_figure()
+    fig.savefig('Pretraining_Loss_Plot')
+    
 
     # test 
     model.evaluate(

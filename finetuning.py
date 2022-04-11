@@ -2,6 +2,8 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix
 
 ds_train = tf.keras.preprocessing.image_dataset_from_directory(
     'dataset',
@@ -53,12 +55,18 @@ ds_test = ds_test.map(normalize)
 
 
 model = tf.keras.models.load_model("model_pretrained")
-model.summary()
+
 
 # print(model.layers[0:5])
 
-# for layer in model.layers[0:5]:
-#     layer.trainable = False
+for layer in model.layers[0:5]:
+    layer.trainable = False
+    
+
+for layer in model.layers[0:5]:
+    assert layer.trainable == False
+
+model.summary()
 
 model.compile(
         loss = tf.keras.losses.SparseCategoricalCrossentropy(),
@@ -76,15 +84,37 @@ model.fit(
 
 # plot training loss
 loss = pd.DataFrame(model.history.history)
-loss.plot()
-plt.title('Fine Tuning Train/Val Accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Percent')
-plt.show()
-plt.savefig('Finetuning_Accuracy_Plot')
+fig = loss.plot()
+fig.set_xlabel('Epoch')
+fig.set_ylabel('Percent')
+fig.set_title('Fine Tuning Loss Plot')
+fig = fig.get_figure()
+fig.savefig('Finetuning_Loss_Plot')
 
 # test 
 model.evaluate(ds_test)
+
+# confusion matrix
+test_labels = np.concatenate([y+1 for x, y in ds_test], axis=0)
+test_images = np.concatenate([x for x, y in ds_test], axis=0)
+
+print("predict classes: ", model.predict(test_images))
+
+predictions = np.array([np.argmax(model.predict(i),axis=1)+1 for i in test_images])
+print(f'test labels: {test_labels}')
+print(f'predictions: {predictions}')
+
+
+cm = confusion_matrix(test_labels, predictions)
+labels = sorted(list(set(test_labels)))
+print(f'labels: {labels}')
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+disp.plot(cmap=plt.cm.Blues)
+plt.show()
+# cm = tf.math.confusion_matrix(test_labels,predictions)
+
+
+
 
 # save model 
 model.save('model_finetuned')
