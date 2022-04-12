@@ -16,6 +16,8 @@ After fine tuning the model achieve a training accuracy of 99.31% and testing ac
 
 ### Convert TF model to CoreML model 
 
+James needs to do this... 
+
 
 
 
