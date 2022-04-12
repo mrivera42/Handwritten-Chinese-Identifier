@@ -5,11 +5,13 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
 
+classes = ['一','二','三','四','五','六','七','八','九','十']
+
 ds_train = tf.keras.preprocessing.image_dataset_from_directory(
     'dataset',
     labels='inferred',
-    label_mode = "int",
-    class_names=['1','2','3','4','5','6','7','8','9','10'],
+    label_mode = "categorical",
+    class_names=classes,
     color_mode='grayscale',
     batch_size=64,
     image_size=(28,28),
@@ -22,8 +24,8 @@ ds_train = tf.keras.preprocessing.image_dataset_from_directory(
 ds_test = tf.keras.preprocessing.image_dataset_from_directory(
     'dataset',
     labels='inferred',
-    label_mode = "int",
-    class_names=['1','2','3','4','5','6','7','8','9','10'],
+    label_mode = "categorical",
+    class_names=classes,
     color_mode='grayscale',
     batch_size=64,
     image_size=(28,28),
@@ -57,19 +59,16 @@ ds_test = ds_test.map(normalize)
 model = tf.keras.models.load_model("model_pretrained")
 
 
-# print(model.layers[0:5])
-
+# freeze convolutional layers 
 for layer in model.layers[0:5]:
     layer.trainable = False
-    
-
-for layer in model.layers[0:5]:
     assert layer.trainable == False
+    
 
 model.summary()
 
 model.compile(
-        loss = tf.keras.losses.SparseCategoricalCrossentropy(),
+        loss = tf.keras.losses.CategoricalCrossentropy(),
         optimizer = 'adam',
         metrics = ['accuracy']
     )
@@ -78,7 +77,7 @@ model.compile(
 model.fit(
     ds_train,
     batch_size=64,
-    epochs=100,
+    epochs=150,
     validation_data=ds_test
 )
 
@@ -94,36 +93,36 @@ fig.savefig('Finetuning_Loss_Plot')
 # test 
 model.evaluate(ds_test)
 
-# confusion matrix
-test_labels = np.concatenate([y+1 for x, y in ds_test], axis=0)
-test_images = np.concatenate([x for x, y in ds_test], axis=0)
+# # confusion matrix
+# test_labels = np.concatenate([y+1 for x, y in ds_test], axis=0)
+# test_images = np.concatenate([x for x, y in ds_test], axis=0)
 
-print("predict classes: ", model.predict(test_images))
+# print("predict classes: ", model.predict(test_images))
 
-predictions = np.array([np.argmax(model.predict(i),axis=1)+1 for i in test_images])
-print(f'test labels: {test_labels}')
-print(f'predictions: {predictions}')
+# predictions = np.array([np.argmax(model.predict(i),axis=1)+1 for i in test_images])
+# print(f'test labels: {test_labels}')
+# print(f'predictions: {predictions}')
 
 
-cm = confusion_matrix(test_labels, predictions)
-labels = sorted(list(set(test_labels)))
-print(f'labels: {labels}')
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
-disp.plot(cmap=plt.cm.Blues)
-plt.show()
+# cm = confusion_matrix(test_labels, predictions)
+# labels = sorted(list(set(test_labels)))
+# print(f'labels: {labels}')
+# disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+# disp.plot(cmap=plt.cm.Blues)
+# plt.show()
 # cm = tf.math.confusion_matrix(test_labels,predictions)
 
 
 
 
-# save model 
-model.save('model_finetuned')
+# # save model 
+# model.save('model_finetuned')
 
-# convert and save as tflite model 
-converter = tf.lite.TFLiteConverter.from_saved_model('model_finetuned')
-tflite_model = converter.convert()
-with open('model.tflite','wb') as f:
-    f.write(tflite_model)
+# # convert and save as tflite model 
+# converter = tf.lite.TFLiteConverter.from_saved_model('model_finetuned')
+# tflite_model = converter.convert()
+# with open('model.tflite','wb') as f:
+#     f.write(tflite_model)
 
 
 
