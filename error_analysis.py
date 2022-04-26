@@ -1,39 +1,39 @@
 import tensorflow as tf
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
+import cv2
 import seaborn as sns
 
+# classes
 classes = ['一','二','三','四','五','六','七','八','九','十']
 
+# load model
 ds_train = tf.keras.preprocessing.image_dataset_from_directory(
     'dataset',
     labels='inferred',
     label_mode = "categorical",
     class_names=classes,
     color_mode='grayscale',
-    batch_size=64,
     image_size=(28,28),
     shuffle=True,
     seed=123,
-    validation_split=0.1,
+    validation_split=0.3,
     subset="training"
 )
 
+# load test data 
 ds_test = tf.keras.preprocessing.image_dataset_from_directory(
     'dataset',
     labels='inferred',
     label_mode = "categorical",
     class_names=classes,
     color_mode='grayscale',
-    batch_size=64,
     image_size=(28,28),
     shuffle=True,
     seed=123,
     validation_split=0.3,
     subset="validation"
 )
-
 
 def normalize(x,y):
     x = tf.cast(x,tf.float32) / 255.0
@@ -43,51 +43,17 @@ ds_train = ds_train.map(normalize)
 ds_test = ds_test.map(normalize)
 
 
-
-model = tf.keras.models.load_model("model_pretrained")
-
-
-# freeze convolutional layers 
-for layer in model.layers[0:5]:
-    layer.trainable = False
-    assert layer.trainable == False
-    
-
-model.summary()
-
-model.compile(
-        loss = tf.keras.losses.CategoricalCrossentropy(),
-        optimizer = 'adam',
-        metrics = ['accuracy']
-    )
-
-# train 
-model.fit(
-    ds_train,
-    batch_size=64,
-    epochs=150,
-    validation_data=ds_test
-)
-
-# plot training loss
-loss = pd.DataFrame(model.history.history)
-fig = loss.plot()
-fig.set_xlabel('Epoch')
-fig.set_ylabel('Percent')
-fig.set_title('Fine Tuning Loss Plot')
-fig = fig.get_figure()
-fig.savefig('Finetuning_Loss_Plot')
-
-# test 
-print("evaluate before saving")
+model = tf.keras.models.load_model('model_finetuned')
 model.evaluate(ds_test)
 
-# error analysis 
+#error analysis
 labels=[]
 predictions=[]
 for x,y in ds_test:
     labels.append(np.argmax(y,axis=-1))
     predictions.append(model.predict(x).argmax(axis=-1))
+print(labels)
+print(predictions)
 
 labels_before = []
 predictions_before = []
@@ -99,38 +65,6 @@ print("labels before: ",labels_before)
 print("predictions before: ",predictions_before)
 cm = tf.math.confusion_matrix(labels=labels_before,predictions=predictions_before)
 sns.heatmap(cm,annot=True)
-plt.savefig('results/finetuning_cm.png')
-
-# save model 
-model.save('model_finetuned')
-
-# load model
-model2 = tf.keras.models.load_model('model_finetuned')
-print("evaluate after loading")
-model.evaluate(ds_test)
-labels=[]
-predictions=[]
-for x,y in ds_test:
-    labels.append(np.argmax(y,axis=-1))
-    predictions.append(model.predict(x).argmax(axis=-1))
-print("labels after: ",labels)
-print("predictions after: ",predictions)
-
-# cm = tf.math.confusion_matrix(labels=labels,predictions=predictions)
-# sns.heatmap(cm,annot=True)
-# plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
+plt.savefig('results/finetuning_cm2.png')
 
 
