@@ -108,7 +108,7 @@ fig.set_title('Pretraining Loss Plot')
 fig.set_xlabel('Epoch')
 fig.set_ylabel('Percent')
 fig = fig.get_figure()
-fig.savefig('Pretraining_Loss_Plot')
+fig.savefig('results/Pretraining_Loss_Plot.png')
 plt.close()
 
 
@@ -128,7 +128,7 @@ sns.heatmap(cm,annot=True)
 plt.title("Pretraining Confusion Matrix")
 plt.ylabel("True Label")
 plt.xlabel("Predicted Label")
-plt.savefig("pretraining_cm.png")
+plt.savefig("results/pretraining_cm.png")
 
 # save model
 model.save('model_pretrained')

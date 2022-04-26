@@ -65,7 +65,7 @@ model.compile(
 model.fit(
     ds_train,
     batch_size=64,
-    epochs=150,
+    epochs=50,
     validation_data=ds_test
 )
 
@@ -76,7 +76,7 @@ fig.set_xlabel('Epoch')
 fig.set_ylabel('Percent')
 fig.set_title('Fine Tuning Loss Plot')
 fig = fig.get_figure()
-fig.savefig('Finetuning_Loss_Plot')
+fig.savefig('results/Finetuning_Loss_Plot.png')
 
 # test 
 print("evaluate before saving")
@@ -97,9 +97,9 @@ for i in range(0,len(labels)):
         predictions_before.append(predictions[i][j])
 print("labels before: ",labels_before)
 print("predictions before: ",predictions_before)
-cm = tf.math.confusion_matrix(labels=labels_before,predictions=predictions_before)
-sns.heatmap(cm,annot=True)
-plt.savefig('results/finetuning_cm.png')
+# cm = tf.math.confusion_matrix(labels=labels_before,predictions=predictions_before)
+# sns.heatmap(cm,annot=True)
+# plt.savefig('results/finetuning_cm.png')
 
 # save model 
 model.save('model_finetuned')
@@ -115,10 +115,6 @@ for x,y in ds_test:
     predictions.append(model.predict(x).argmax(axis=-1))
 print("labels after: ",labels)
 print("predictions after: ",predictions)
-
-# cm = tf.math.confusion_matrix(labels=labels,predictions=predictions)
-# sns.heatmap(cm,annot=True)
-# plt.show()
 
 
 
