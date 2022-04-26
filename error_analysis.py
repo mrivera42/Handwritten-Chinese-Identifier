@@ -42,29 +42,58 @@ def normalize(x,y):
 ds_train = ds_train.map(normalize)
 ds_test = ds_test.map(normalize)
 
-
+# load model
 model = tf.keras.models.load_model('model_finetuned')
+
+# recheck accuracy on test data
 model.evaluate(ds_test)
 
 #error analysis
-labels=[]
-predictions=[]
+labels_with_batches=[]
+predictions_with_batches=[]
+images_with_batches = []
 for x,y in ds_test:
-    labels.append(np.argmax(y,axis=-1))
-    predictions.append(model.predict(x).argmax(axis=-1))
-print(labels)
-print(predictions)
+    labels_with_batches.append(np.argmax(y,axis=-1))
+    predictions_with_batches.append(model.predict(x).argmax(axis=-1))
+    images_with_batches.append(x)
+print(labels_with_batches)
+print(predictions_with_batches)
 
-labels_before = []
-predictions_before = []
-for i in range(0,len(labels)):
-    for j in range(0,len(labels[i])):
-        labels_before.append(labels[i][j])
-        predictions_before.append(predictions[i][j])
-print("labels before: ",labels_before)
-print("predictions before: ",predictions_before)
-cm = tf.math.confusion_matrix(labels=labels_before,predictions=predictions_before)
+labels_no_batches = []
+predictions_no_batches = []
+images_no_batches = []
+for i in range(0,len(labels_with_batches)):
+    for j in range(0,len(labels_with_batches[i])):
+        labels_no_batches.append(labels_with_batches[i][j])
+        predictions_no_batches.append(predictions_with_batches[i][j])
+        images_no_batches.append(images_with_batches[i][j])
+
+print("labels before: ",labels_no_batches)
+print("predictions before: ",predictions_no_batches)
+
+# confusion matrix
+cm = tf.math.confusion_matrix(labels=labels_no_batches,predictions=predictions_no_batches)
 sns.heatmap(cm,annot=True)
 plt.savefig('results/finetuning_cm2.png')
+plt.close()
 
+# look at incorrectly predicted test examples 
+indices = np.where(np.array(labels_no_batches) != np.array(predictions_no_batches))
+indices = indices[0].tolist()
+
+print("indices",indices)
+
+incorrect = [images_no_batches[i] for i in indices]
+count = 0
+for i in incorrect:
+    index = indices[count]
+    plt.imshow(i)
+    plt.title(f'Predicted: {predictions_no_batches[index]+1}, Actual: {labels_no_batches[index]+1}')
+    plt.savefig(f'results/incorrect/{indices[count]}')
+    plt.close()
+    count += 1
+
+# error analysis of labels 
+sns.displot(data=[labels_no_batches[i] for i in indices])
+plt.savefig('results/error_displot.png')
 
