@@ -72,7 +72,7 @@ model.add(tf.keras.layers.Conv2D(
             kernel_size=(5,5),
             strides=(1,1),
             activation='relu',
-            input_shape=(56,56,1)))
+            input_shape=(28,28,1)))
 model.add(tf.keras.layers.AveragePooling2D())
 model.add(tf.keras.layers.Conv2D(
             filters=16,
@@ -132,16 +132,21 @@ plt.savefig("results/pretraining_cm.png")
 
 # save model
 model.save('model_pretrained')
+print("x_train[0] dimensions: ",x_train[0].shape)
+single_example = np.expand_dims(x_train[0],axis=0)
+print("reformatted x_train[0] dimensions: ",single_example.shape)
+print(model.predict(single_example)[0].argmax())
+print(model(single_example).argmax())
 
-# load model 
-model2 = tf.keras.models.load_model('model_pretrained')
+# # load model 
+# model2 = tf.keras.models.load_model('model_pretrained')
 
-# error analysis 
-model2.evaluate(x_test)
-labels = y_test
-predictions = model2.predict(x_test).argmax(axis=-1)
-print("labels after: ",labels)
-print("predictions after: ",predictions)
+# # error analysis 
+# model2.evaluate(x_test)
+# labels = y_test
+# predictions = model2.predict(x_test).argmax(axis=-1)
+# print("labels after: ",labels)
+# print("predictions after: ",predictions)
 
 
 
