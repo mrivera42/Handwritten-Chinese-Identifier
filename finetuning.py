@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import coremltools as ct
 
 classes = ['一','二','三','四','五','六','七','八','九','十']
 
@@ -12,7 +13,7 @@ ds_train = tf.keras.preprocessing.image_dataset_from_directory(
     label_mode = "categorical",
     class_names=classes,
     color_mode='grayscale',
-    batch_size=64,
+    batch_size=1,
     image_size=(28,28),
     shuffle=True,
     seed=123,
@@ -26,7 +27,7 @@ ds_test = tf.keras.preprocessing.image_dataset_from_directory(
     label_mode = "categorical",
     class_names=classes,
     color_mode='grayscale',
-    batch_size=64,
+    batch_size=1,
     image_size=(28,28),
     shuffle=True,
     seed=123,
@@ -104,17 +105,37 @@ print("predictions before: ",predictions_before)
 # save model 
 model.save('model_finetuned')
 
-# load model
-model2 = tf.keras.models.load_model('model_finetuned')
-print("evaluate after loading")
-model.evaluate(ds_test)
-labels=[]
-predictions=[]
-for x,y in ds_test:
-    labels.append(np.argmax(y,axis=-1))
-    predictions.append(model.predict(x).argmax(axis=-1))
-print("labels after: ",labels)
-print("predictions after: ",predictions)
+# convert to coreml 
+# output_labels = classes
+# scale = 1/255.
+
+# coreml_model = ct.convert(
+#     model,
+#     input_names=['image'],
+#     image_input_names=['image'],
+#     output_names=['output'],
+#     class_labels=output_labels,
+#     image_scale=scale
+# )
+# coreml_model.author = 'Max Rivera'
+# coreml_model.short_description = 'ML model for handwritten Chinese character classification'
+# coreml_model.version = '0.1.0'
+
+# coreml_model.save("CoreModel.mlmodel")
+
+# image_input = ct.ImageType(name="image",shape=(1,28,28,1,),)
+# classifier_config = ct.ClassifierConfig(classes)
+
+# mlmodel = ct.convert(
+#     model,
+#     inputs=[image_input],
+#     classifier_config=classifier_config,
+# )
+
+# example_image = ds_train[0][0]
+# out_dict = mlmodel.predict({"image":example_image})
+# print(out_dict["classLabels"])
+
 
 
 

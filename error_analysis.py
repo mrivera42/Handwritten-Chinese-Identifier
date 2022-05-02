@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 import seaborn as sns
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+#from sklearn.metrics import confusion_matrix
+import coremltools as ct
 
 
 # classes
@@ -60,32 +61,58 @@ for x,y in ds_test:
     labels.append(classes[np.argmax(y,axis=-1)[0]])
     predictions.append(classes[model.predict(x).argmax(axis=-1)[0]])
     images.append(x)
-print(f'labels: {labels}')
-print(f'predictions: {predictions}')
+# print(f'labels: {labels}')
+# print(f'predictions: {predictions}')
 
 # confusion matrix 
-cm = confusion_matrix(labels,predictions)
-sns.heatmap(cm,annot=True)
-plt.savefig('results/finetuning_cm2.png')
-plt.close()
+# cm = confusion_matrix(labels,predictions)
+# sns.heatmap(cm,annot=True)
+# plt.savefig('results/finetuning_cm2.png')
+# plt.close()
 
 # look at incorrectly predicted test examples 
 indices = np.where(np.array(labels) != np.array(predictions))[0].tolist()
-print(f'indices: {indices}')
+# print(f'indices: {indices}')
 
-incorrect = [images[i] for i in indices]
-count = 0
-for i in incorrect:
-    index = indices[count]
-    plt.imshow(i)
-    plt.title(f'Predicted: {predictions[index]+1}, Actual: {labels[index]+1}')
-    plt.savefig(f'results/incorrect/{indices[count]}')
-    plt.close()
-    count += 1
+# incorrect = [images[i] for i in indices]
+# count = 0
+# if len(incorrect) > 0:
+#     for i in incorrect:
+#         i = np.reshape(i,(28,28,1))
+#         index = indices[count]
+#         plt.imshow(i)
+#         plt.title(f'Predicted: {predictions[index]}, Actual: {labels[index]}')
+#         plt.savefig(f'results/incorrect/{indices[count]}')
+#         plt.close()
+#         count += 1
 
 # error analysis of labels 
-sns.displot(data=[labels[i] for i in indices])
-plt.savefig('results/error_displot.png')
+# sns.displot(data=[labels[i] for i in indices])
+# plt.savefig('results/error_displot.png')
+
+# image_input = ct.ImageType(name="image",scale=1/255.,shape=(1,28,28,1),color_layout="G")
+# classifier_config = ct.ClassifierConfig(classes)
+# mlmodel = ct.converters.keras.convert(
+#     model,
+#     inputs=[image_input],
+#     classifier_config=classifier_config,
+#     input_names=["image"],
+#     image_input_names=["image"],
+#     is_bgr = False
+# )
+classifier_config = ct.ClassifierConfig(classes)
+mlmodel = ct.convert(model, inputs=[ct.ImageType()],classifier_config=classifier_config)
+
+example_image = np.random.rand(1,28,28,1)
+print("example_image shape: ",example_image.shape)
+print("example_image type: ",type(example_image))
+mlmodel.save('coreml_model.mlmodel')
+try:
+    out_dict = mlmodel.predict({'image':example_image})
+    print(out_dict["classLabels"])
+except(RuntimeError):
+    print("Model could not predict on the input. Required input feature not passed to neural network.")
+
 
 
 
