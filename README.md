@@ -16,7 +16,7 @@ After fine tuning the model achieve a training accuracy of 99.31% and testing ac
 
 The model was then converted to a CoreML model using the coremltools library. The coremltools library allows specification of an image input type. When exported into Xcode, the model takes an input of a grayscale 28x28 image and outputs a String of predicted class label. 
 
-![Model input and output](coreml_input_ouput.png)
+![Model input and output](coreml_input_output.png)
 
 ### iOS app using SwiftUI, CoreML, and Vision frameworks 
 
