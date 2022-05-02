@@ -68,14 +68,6 @@ struct ContentView: View {
                                 }
                             }
                         })
-                    
-//                        Button("Select Image") {
-//                            self.isShowingImagePicker.toggle()
-//                        }
-//                            .buttonStyle(.bordered)
-//                            .sheet(isPresented: $isShowingImagePicker, content: {
-//                                ImagePicker(isPresented: $isShowingImagePicker,selectedImage: self.$image)
-//                            })
                         
                         Button("Get Prediction") {
                             if (image == UIImage(imageLiteralResourceName:"placeholder")) {

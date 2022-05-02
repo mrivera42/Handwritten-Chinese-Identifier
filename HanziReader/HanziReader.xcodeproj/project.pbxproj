@@ -11,8 +11,8 @@
 		FB075D7F281AE8F7001DBCDA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB075D7E281AE8F7001DBCDA /* ContentView.swift */; };
 		FB075D81281AE8F8001DBCDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB075D80281AE8F8001DBCDA /* Assets.xcassets */; };
 		FB075D84281AE8F8001DBCDA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB075D83281AE8F8001DBCDA /* Preview Assets.xcassets */; };
-		FBDDB56C281EF7070008E462 /* coreml_model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = FBDDB56B281EF7070008E462 /* coreml_model.mlmodel */; };
 		FBDDB56E28203A560008E462 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDDB56D28203A560008E462 /* ImagePicker.swift */; };
+		FBDDB570282069EE0008E462 /* coreml_model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = FBDDB56F282069EE0008E462 /* coreml_model.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,8 +21,9 @@
 		FB075D7E281AE8F7001DBCDA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FB075D80281AE8F8001DBCDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB075D83281AE8F8001DBCDA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		FBDDB56B281EF7070008E462 /* coreml_model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = coreml_model.mlmodel; path = "../../Handwritten-Chinese-Identifier/coreml_model.mlmodel"; sourceTree = "<group>"; };
 		FBDDB56D28203A560008E462 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		FBDDB56F282069EE0008E462 /* coreml_model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = coreml_model.mlmodel; path = ../../coreml_model.mlmodel; sourceTree = "<group>"; };
+		FBDDB57128206D500008E462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,8 +56,9 @@
 		FB075D7B281AE8F7001DBCDA /* HanziReader */ = {
 			isa = PBXGroup;
 			children = (
+				FBDDB57128206D500008E462 /* Info.plist */,
 				FB075D7C281AE8F7001DBCDA /* HanziReaderApp.swift */,
-				FBDDB56B281EF7070008E462 /* coreml_model.mlmodel */,
+				FBDDB56F282069EE0008E462 /* coreml_model.mlmodel */,
 				FB075D7E281AE8F7001DBCDA /* ContentView.swift */,
 				FBDDB56D28203A560008E462 /* ImagePicker.swift */,
 				FB075D80281AE8F8001DBCDA /* Assets.xcassets */,
@@ -145,7 +147,7 @@
 			files = (
 				FB075D7F281AE8F7001DBCDA /* ContentView.swift in Sources */,
 				FBDDB56E28203A560008E462 /* ImagePicker.swift in Sources */,
-				FBDDB56C281EF7070008E462 /* coreml_model.mlmodel in Sources */,
+				FBDDB570282069EE0008E462 /* coreml_model.mlmodel in Sources */,
 				FB075D7D281AE8F7001DBCDA /* HanziReaderApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,6 +280,7 @@
 				DEVELOPMENT_TEAM = 762L5FAWXH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HanziReader/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "please allow app to use the camera";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -307,6 +310,7 @@
 				DEVELOPMENT_TEAM = 762L5FAWXH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HanziReader/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "please allow app to use the camera";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

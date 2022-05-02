@@ -21,14 +21,12 @@ struct ImagePicker: UIViewControllerRepresentable {
             self.parent = parent
         }
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let cameraImage = info[.originalImage] as? UIImage {
-                print(cameraImage)
+            if let cameraImage = info[.editedImage] as? UIImage {
+                
                 self.parent.selectedImage = cameraImage
             }
             self.parent.isShowingSelector = false
             self.parent.isPresented = false
-            
-            
         }
         
     }
