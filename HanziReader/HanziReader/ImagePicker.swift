@@ -14,7 +14,7 @@ struct ImagePicker: UIViewControllerRepresentable {
     @Binding var selectedImage: UIImage
     @Binding var isShowingSelector: Bool
     @Binding var sourceType: String
-    //@Binding var sourceType = ""
+    
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         let parent: ImagePicker
         init(parent: ImagePicker) {
