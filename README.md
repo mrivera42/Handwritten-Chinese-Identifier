@@ -11,7 +11,10 @@ Then, transfer learning was used to fine tune the model on a custom image datase
 
 ### Model Evaluation and Improvement 
 After fine tuning the model achieve a training accuracy of 99.31% and testing accuracy of 82.11%, indicating that overfitting has occured. This is probably due to the dataset size being so small, some ways to prevent overfitting include adding more data (increasing the dataset size or data augmentation), regularization, or neural network architecture search. Manual error analysis revealed that the incorrectly classified samples were all drawn with pencil or pen. So make the best use of the pretrained model, these samples were removed, leading to a 100% accuracy on the training set and 99% accuracy on the test set with 50 epochs of gradient descent. 
+
 ![Fine tuning loss plot](results/Finetuning_Loss_Plot.png)
+![Fine tuning confusion matrix](results/finetuning_cm2.png)
+
 
 ### Convert Tensorflow model to CoreML
 The model was then converted to a CoreML model using the coremltools library. The coremltools library allows specification of an image input type. When exported into Xcode, the model takes an input of a grayscale 28x28 image and outputs a String of predicted class label. 
