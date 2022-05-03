@@ -22,7 +22,7 @@ The model was then converted to a CoreML model using the coremltools library. Th
 
 The iOS app layout was built using the SwiftUI framework. Upon a button click, users can choose to take a photo from the camera or upload an image from photo library within the app. Previously, images fed into a CoreML model need to be resized, grayscaled, and converted to a CVPixelBuffer. This is complicated and can slow down the model. Instead the new Vision framework can do all the preprocessing for us. The Vision framework was then used to take the input image and preprocess it to fit the input specifications that the CoreML model expects, as well as take the ouput of the model and format it to a String to be displayed on the screen. 
 
-![App demo](hanzi-reader-demo.mov)
+
 
 
 
