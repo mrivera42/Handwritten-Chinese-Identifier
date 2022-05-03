@@ -6,6 +6,9 @@ A base model using Lenet-5 architecture was created with keras subclassing and p
 
 ![Lenet-5 Architecture](lenet-5.jpeg)
 
+![Pretraining loss plot](Pretraining_Loss_Plot.png)
+![Pretraining confusion matrix](pretraining_cm.png)
+
 ### Transfer Learning & Fine Tuning
 Then, transfer learning was used to fine tune the model on a custom image dataset collected of handwritten Chinese characters. These digits were drawn with pen, pencil, and marker. Fine tuning involved freezing the convolutional layers and retraining only the last few fully connected layers on the custom dataset. This is done because convolutional layers trained on the MNIST handwritten digits may also share some features with a custom handwritten dataset, while the last few FC layers are more specialized and need to be adapted to the new dataset through fine tuning. 
 
